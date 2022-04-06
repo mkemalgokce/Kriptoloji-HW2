@@ -1,9 +1,7 @@
 #include "Login.h"
 
-
-int main() { 
-
+int main(){
+    
     Login my_login;
-
     return 0;
 }
