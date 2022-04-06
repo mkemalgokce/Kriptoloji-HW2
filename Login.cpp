@@ -1,6 +1,16 @@
 #include "Login.h"
 
 Login::Login() {
+    GetValuesFromUser();
+    if (m_answer == LOGIN) {
+        CheckLogin();
+    }else {
+        CreateUser();
+    }
+    std::cout << "\n [!!!!!!!]  EXITING  [!!!!!!!] \n";
+}
+
+void Login::GetValuesFromUser() {
     int answer;
     std::cout << "\t \t Welcome \n |-----------------------------------| \n\n";
     std::cout << "Do you want to login or create user ?? \n (Type: 0 for Login, 1 for Create User) \n\n";
@@ -9,13 +19,13 @@ Login::Login() {
     std::cin >> m_username;
     std::cout << "Please Enter Your Password: \n";
     std::cin >> m_password;
-    if (answer == LOGIN) {
-        CheckLogin();
+    if(answer == 0) {
+        m_answer = LOGIN;
     }else {
-        CreateUser();
+        m_answer = CREATE_USER;
     }
-}
 
+}
 void Login::CheckLogin() {
     std::ifstream my_file("login.txt");
     std::string satir;
@@ -28,22 +38,19 @@ void Login::CheckLogin() {
             
             if (m_username == username) {
                 is_found = true;
-                if (std::to_string(HashPassword())== password) { 
+                if (HashPassword() == password) { 
                     std::cout << "Login Completed [+] \n";
                 }else { 
                     std::cout << "Invalid Password, Please Retry [!] \n";
                 }
-            }else { 
-                
             }
-
         }
 
     }
     if (!is_found) {
         std::cout << "\nUsername cannot find [!] \n";
     }
-    std::cout << "\nEXITING \n";
+    
 }
 
 
@@ -52,16 +59,16 @@ void Login::CreateUser() {
     if (my_file.is_open()) {
 
         my_file << m_username << ":" << HashPassword() << "\n";
-        std::cout << "Username and Password Saved [+] \n";
+        std::cout << "\nUsername and Password Saved [+] \n";
         
     }
 }
 
 
-unsigned long Login::HashPassword() {
+std::string Login::HashPassword() {
     std::hash <std::string> hash;
 
     unsigned long hashedPassword = hash(m_password);
 
-    return hashedPassword;
+    return std::to_string(hashedPassword);
 }
